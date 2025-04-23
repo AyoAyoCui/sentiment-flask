@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>舆情分析</title>
+</head>
+<body>
+  <h1>上传留言数据</h1>
+  <form action="/trend" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv">
+    <button type="submit">生成反馈趋势图</button>
+  </form>
+  <hr>
+  <form id="wordcloud-form">
+    <textarea id="text" name="text" rows="5" cols="60" placeholder="输入文本..."></textarea>
+    <br>
+    <button type="button" onclick="submitWordCloud()">生成词云图</button>
+  </form>
+  <img id="wordcloud-img" style="margin-top:20px; max-width: 500px;">
+  <script>
+    function submitWordCloud() {
+      fetch("/wordcloud", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ text: document.getElementById("text").value })
+      }).then(res => res.json())
+        .then(data => {
+          document.getElementById("wordcloud-img").src = data.img_url;
+        });
+    }
+  </script>
+</body>
+</html>
